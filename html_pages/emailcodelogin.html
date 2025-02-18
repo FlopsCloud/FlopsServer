@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Code Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="config.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 5px;
+            width: 200px;
+        }
+        #captchaImage {
+            margin-top: 10px;
+            max-width: 200px;
+        }
+        #refreshButton {
+            width: auto;
+            padding: 5px 10px;
+        }
+        #errorMessage {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Code Login</h1>
+        <form id="emailCodeLoginForm">
+            <input type="email" id="email" placeholder="Email Address" required><br>
+            <input type="text" id="emailCode" placeholder="Email Code" required><br>
+            <div id="captchaContainer">
+                <img id="captchaImage" alt="Captcha Image" src="">
+            </div>
+            <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
+            <button type="button" id="refreshButton">Refresh Captcha</button><br>
+            <button type="submit">Login</button>
+        </form>
+        <div id="errorMessage"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function loadCaptcha() {
+                $.ajax({
+                    url: FCA_HOST+'/v1/user/captcha',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response && response.code === 200 && response.data && response.data.captchaId && response.data.imageBase64) {
+                            $('#captchaImage').attr('src', response.data.imageBase64);
+                            localStorage.setItem('captchaId', response.data.captchaId);
+                            $('#errorMessage').text('');
+                        } else {
+                            $('#errorMessage').text('Invalid captcha response');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#errorMessage').text('Error fetching captcha: ' + error);
+                    }
+                });
+            }
+
+            // Load captcha on page load
+            loadCaptcha();
+
+            // Refresh captcha when button is clicked
+            $('#refreshButton').click(loadCaptcha);
+
+            $('#emailCodeLoginForm').submit(function(e) {
+                e.preventDefault();
+                var email = $('#email').val();
+                var emailCode = $('#emailCode').val();
+                var captchaInput = $('#captchaInput').val();
+                var captchaId = localStorage.getItem('captchaId');
+
+                // Here you would typically send an AJAX request to your server
+                $.ajax({
+                    url: FCA_HOST+'/v1/emailcodelogin', // Replace with your actual email code login endpoint
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        email: email,
+                        emailCode: emailCode,
+                        captchaId: captchaId,
+                        captchaInput: captchaInput
+                    }),
+                    success: function(response) {
+                        if (response && response.code === 200 && response.data && response.data.token) {
+                            // Save JWT token
+                            localStorage.setItem('jwtToken', response.data.token);
+                            $('#errorMessage').text('Login successful!');
+                            // Redirect to a new page or update UI as needed
+                        } else {
+                            $('#errorMessage').text('Login failed: ' + (response.message || 'Unknown error'));
+                            loadCaptcha(); // Refresh captcha on failed login
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#errorMessage').text('Login error: ' + error);
+                        loadCaptcha(); // Refresh captcha on error
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

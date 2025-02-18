@@ -1,0 +1,1049 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/baseDataFilter": {
+      "post": {
+        "operationId": "BaseDataFilterHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseDataFilterResponse"
+            }
+          }
+        },
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/baseDataList": {
+      "post": {
+        "operationId": "BaseDataListHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseDataListResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseDataListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/createBaseData": {
+      "post": {
+        "operationId": "CreateBaseDataHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseData"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseData"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/createInstance": {
+      "post": {
+        "operationId": "CreateInstanceHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateInstanceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateInstanceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/createServer": {
+      "post": {
+        "operationId": "CreateServerHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Server"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Server"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/hello/{name}": {
+      "get": {
+        "operationId": "HelloHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ]
+      }
+    },
+    "/api/login": {
+      "post": {
+        "operationId": "LoginHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ]
+      }
+    },
+    "/api/register": {
+      "post": {
+        "operationId": "RegisterHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RegisterResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ]
+      }
+    },
+    "/api/serverList": {
+      "post": {
+        "operationId": "ServerListHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ServerListResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServerListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/updateBaseData": {
+      "post": {
+        "operationId": "UpdateBaseDataHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseData"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BaseData"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/updateServer": {
+      "post": {
+        "operationId": "UpdateServerHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Server"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Server"
+            }
+          }
+        ],
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/api/userinfo": {
+      "post": {
+        "operationId": "UserHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          }
+        },
+        "tags": [
+          "fca-api"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BaseData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "title": "BaseData",
+      "required": [
+        "id",
+        "type",
+        "name",
+        "value",
+        "comment"
+      ]
+    },
+    "BaseDataFilterResponse": {
+      "type": "object",
+      "properties": {
+        "billingMethod": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "region": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "supplier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "processor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "gpuModel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "graphicsMemory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "cpuModel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "processorCount": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "ip": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        }
+      },
+      "title": "BaseDataFilterResponse",
+      "required": [
+        "billingMethod",
+        "region",
+        "supplier",
+        "processor",
+        "gpuModel",
+        "graphicsMemory",
+        "cpuModel",
+        "processorCount",
+        "image",
+        "ip"
+      ]
+    },
+    "BaseDataListRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "BaseDataListRequest",
+      "required": [
+        "type",
+        "name",
+        "page",
+        "pageSize"
+      ]
+    },
+    "BaseDataListResponse": {
+      "type": "object",
+      "properties": {
+        "baseDataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseData"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "BaseDataListResponse",
+      "required": [
+        "baseDataList",
+        "total"
+      ]
+    },
+    "CreateInstanceRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "serverId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "image": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ip": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "type": "string"
+        },
+        "containerPort": {
+          "type": "string"
+        },
+        "gpuCores": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskPath": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number",
+          "format": "double"
+        },
+        "mountPath": {
+          "type": "string"
+        }
+      },
+      "title": "CreateInstanceRequest",
+      "required": [
+        "userId",
+        "serverId",
+        "image",
+        "ip",
+        "port",
+        "containerPort",
+        "gpuCores",
+        "memory",
+        "diskPath",
+        "cost",
+        "mountPath"
+      ]
+    },
+    "CreateInstanceResponse": {
+      "type": "object",
+      "properties": {
+        "instanceId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "serverId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "image": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ip": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "type": "string"
+        },
+        "containerPort": {
+          "type": "string"
+        },
+        "gpuCores": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "diskPath": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number",
+          "format": "double"
+        },
+        "mountPath": {
+          "type": "string"
+        }
+      },
+      "title": "CreateInstanceResponse",
+      "required": [
+        "instanceId",
+        "userId",
+        "serverId",
+        "image",
+        "ip",
+        "port",
+        "containerPort",
+        "gpuCores",
+        "memory",
+        "diskPath",
+        "cost",
+        "mountPath"
+      ]
+    },
+    "InstancePortMapping": {
+      "type": "object",
+      "properties": {
+        "serverId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "instanceId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "containerPort": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "InstancePortMapping",
+      "required": [
+        "serverId",
+        "instanceId",
+        "port",
+        "containerPort"
+      ]
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "LoginRequest",
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "accessExpire": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orgs": {
+          "$ref": "#/definitions/Orgs"
+        }
+      },
+      "title": "LoginResponse",
+      "required": [
+        "accessToken",
+        "accessExpire",
+        "orgs"
+      ]
+    },
+    "Org": {
+      "type": "object",
+      "properties": {
+        "orgId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "orgName": {
+          "type": "string"
+        }
+      },
+      "title": "Org",
+      "required": [
+        "orgId",
+        "orgName"
+      ]
+    },
+    "Orgs": {
+      "type": "object",
+      "properties": {
+        "orgs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Org"
+          }
+        }
+      },
+      "title": "Orgs",
+      "required": [
+        "orgs"
+      ]
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "RegisterRequest",
+      "required": [
+        "username",
+        "email",
+        "password"
+      ]
+    },
+    "RegisterResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "orgs": {
+          "$ref": "#/definitions/Orgs"
+        }
+      },
+      "title": "RegisterResponse",
+      "required": [
+        "userId",
+        "username",
+        "email",
+        "orgs"
+      ]
+    },
+    "Request": {
+      "type": "object",
+      "title": "Request"
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        }
+      },
+      "title": "Response",
+      "required": [
+        "code",
+        "message",
+        "info"
+      ]
+    },
+    "Server": {
+      "type": "object",
+      "properties": {
+        "serverId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "billingMethod": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "region": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "supplier": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "processor": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "gpuModel": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "gpuCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "graphicsMemory": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cpuModel": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cpuCores": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "processorCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "systemDisk": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dataDisk": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maxDataDisk": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "speedDesc": {
+          "type": "string"
+        },
+        "gpuDriver": {
+          "type": "string"
+        },
+        "cudaVersion": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number",
+          "format": "double"
+        },
+        "available": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "expireDate": {
+          "type": "string"
+        }
+      },
+      "title": "Server",
+      "required": [
+        "serverId",
+        "billingMethod",
+        "region",
+        "supplier",
+        "processor",
+        "gpuModel",
+        "gpuCount",
+        "graphicsMemory",
+        "cpuModel",
+        "cpuCores",
+        "processorCount",
+        "memory",
+        "systemDisk",
+        "dataDisk",
+        "maxDataDisk",
+        "speedDesc",
+        "gpuDriver",
+        "cudaVersion",
+        "cost",
+        "available",
+        "total",
+        "expireDate"
+      ]
+    },
+    "ServerIpMapping": {
+      "type": "object",
+      "properties": {
+        "ServerId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Ip": {
+          "type": "string"
+        }
+      },
+      "title": "ServerIpMapping",
+      "required": [
+        "serverId",
+        "ip"
+      ]
+    },
+    "ServerListRequest": {
+      "type": "object",
+      "properties": {
+        "billingMethod": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "region": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "supplier": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "processor": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "gpuModel": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "graphicsMemory": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cpuModel": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "processorCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "ServerListRequest",
+      "required": [
+        "billingMethod",
+        "region",
+        "supplier",
+        "processor",
+        "gpuModel",
+        "graphicsMemory",
+        "cpuModel",
+        "processorCount",
+        "page",
+        "pageSize"
+      ]
+    },
+    "ServerListResponse": {
+      "type": "object",
+      "properties": {
+        "serverList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Server"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ServerListResponse",
+      "required": [
+        "serverList",
+        "total"
+      ]
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double"
+        },
+        "orgs": {
+          "$ref": "#/definitions/Orgs"
+        }
+      },
+      "title": "UserResponse",
+      "required": [
+        "userId",
+        "username",
+        "email",
+        "balance",
+        "orgs"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

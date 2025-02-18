@@ -1,0 +1,163 @@
+syntax = "v1"
+
+type Request {
+	Name string `path:"name,options=you|me"`
+}
+
+type Response {
+	Code    int64  `json:"code"`
+	Message string `json:"message"`
+	Info    string `json:"info,omitempty"`
+}
+
+type ListStorageResponse {
+	Code      int64     `json:"code"`
+	Message   string    `json:"message"`
+	Namespace string    `json:"namespace"`
+	Storages  []Storage `json:"storages"`
+}
+
+type Storage {
+	Name         string `json:"name"`
+	Status       string `json:"status"`
+	Storage      uint64 `json:"storage"`
+	StorageClass string `json:"storageClass"`
+}
+
+type ListVhostsResponse {
+	Code      int64    `json:"code"`
+	Message   string   `json:"message"`
+	Namespace string   `json:"namespace"`
+	FcbPods   []FcbPod `json:"fcbPods"`
+}
+
+type AdminListVhostsResponse {
+	Code    int64                         `json:"code"`
+	Message string                        `json:"message"`
+	Data    []AdminListVhostsResponseData `json:"data"`
+}
+
+type AdminListVhostsResponseData {
+	Namespace string   `json:"namespace"`
+	FcbPods   []FcbPod `json:"fcbPods"`
+}
+
+type DelVhostRequest {
+	// Namespace string `json:"namespace"`
+	Name string `json:"name"`
+}
+
+type AdminDelVhostRequest {
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
+}
+
+type VhostRequest {
+	FcbPod FcbPod `json:"fcbpod"`
+}
+
+type CreateStorageRequest {
+	Name    string `json:"name"`
+	Storage uint64 `json:"storage"`
+}
+
+type DelStorageRequest {
+	Name string `json:"name"`
+}
+
+type FcbPod {
+	Name    string `json:"name"`
+	Port    int32  `json:"port"`
+	Cpu     uint64 `json:"cpu"`
+	Memory  uint64 `json:"memory"`
+	Storage uint64 `json:"storage"`
+	Gpu     uint64 `json:"gpu"`
+	Image   string `json:"image"`
+	Mount   string `json:"mount"`
+	Status  string `json:"status,optional"`
+}
+
+type ExecVhostSshRequest {
+	Namespace     string `form:"namespace"`
+	PodName       string `form:"pod_name"`
+	ContainerName string `form:"container_name"`
+}
+
+type ServerInfo {
+	Name        string `json:"name"`
+	TotalCPU    string `json:"total_cpu"`
+	UsedCPU     string `json:"used_cpu"`
+	TotalMemory string `json:"total_memory"`
+	UsedMemory  string `json:"used_memory"`
+	TotalGPU    string `json:"total_gpu"`
+	UsedGPU     string `json:"used_gpu"`
+	GPUType     string `json:"gpu_type"`
+	Status      string `json:"status"`
+}
+
+type ReadVhostRequest {
+	Name string `json:"name"`
+}
+
+type ReadVhostsResponse {
+	Code      int64  `json:"code"`
+	Message   string `json:"message"`
+	Namespace string `json:"namespace"`
+	FcbPod    FcbPod `json:"fcbpod"`
+}
+
+type ListServersResponse {
+	Code    int64        `json:"code"`
+	Message string       `json:"message"`
+	Servers []ServerInfo `json:"servers"`
+}
+
+service fcb-api {
+	@handler ExecVhostSshHandler
+	get /vhost/ssh (ExecVhostSshRequest) returns (Response)
+
+	@handler ListServersHandler
+	get /server/list returns (ListServersResponse)
+
+	@handler InfoHandler
+	get /sys/info returns (Response)
+}
+
+@server (
+	jwt: Auth
+)
+service fcb-api {
+	@handler FcbHandler
+	get /from/:name (Request) returns (Response)
+
+	@handler CreateVhostHandler
+	post /vhost/create (VhostRequest) returns (Response)
+
+	@handler UpdateVhostHandler
+	post /vhost/update (VhostRequest) returns (Response)
+
+	@handler ListVhostsHandler
+	get /vhost/list returns (ListVhostsResponse)
+
+	@handler ReadVhostHandler
+	post /vhost/read (ReadVhostRequest) returns (ReadVhostsResponse)
+
+	@handler DelVhostHandler
+	post /vhost/del (DelVhostRequest) returns (Response)
+
+	@handler CreateStorageHandler
+	post /storage/create (CreateStorageRequest) returns (Response)
+
+	@handler DelStorageHandler
+	post /storage/del (DelStorageRequest) returns (Response)
+
+	@handler ListStorageHandler
+	get /storage/list returns (ListStorageResponse)
+
+	@handler AdminListVhostsHandler
+	get /admin/vhost/list returns (AdminListVhostsResponse)
+
+	@handler AdminDelVhostHandler
+	post /admin/vhost/del (AdminDelVhostRequest) returns (Response)
+}
+

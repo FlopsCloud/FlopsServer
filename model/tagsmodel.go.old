@@ -1,0 +1,57 @@
+package model
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
+
+var _ TagsModel = (*customTagsModel)(nil)
+
+type (
+	// TagsModel is an interface to be customized, add more methods here,
+	// and implement the added methods in customTagsModel.
+	TagsModel interface {
+		tagsModel
+		withSession(session sqlx.Session) TagsModel
+
+		FindByName(ctx context.Context, name string) (*Tags, error)
+	}
+
+	customTagsModel struct {
+		*defaultTagsModel
+	}
+)
+
+// NewTagsModel returns a model for the database table.
+func NewTagsModel(conn sqlx.SqlConn) TagsModel {
+	return &customTagsModel{
+		defaultTagsModel: newTagsModel(conn),
+	}
+}
+
+func (m *customTagsModel) withSession(session sqlx.Session) TagsModel {
+	return NewTagsModel(sqlx.NewSqlConnFromSession(session))
+}
+
+func (m *customTagsModel) FindAll(ctx context.Context) ([]*Tags, error) {
+	var tags []*Tags
+	query := fmt.Sprintf("select %s from %s", tagsRows, m.table)
+	err := m.conn.QueryRowsCtx(ctx, &tags, query)
+	return tags, err
+}
+
+func (m *customTagsModel) FindByName(ctx context.Context, name string) (*Tags, error) {
+	var tag Tags
+	query := fmt.Sprintf("select %s from %s where `tag_name` = ? limit 1", tagsRows, m.table)
+	err := m.conn.QueryRowCtx(ctx, &tag, query, name)
+	switch err {
+	case nil:
+		return &tag, nil
+	case sqlx.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}

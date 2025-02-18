@@ -1,0 +1,240 @@
+
+type CreateBucketRequest {
+	BucketName string `json:"bucketName"`
+	// RegionName     string `json:"regionName"`
+	RegionId uint64 `json:"regionId,optional"`
+}
+
+type CreateBucketResponse {
+	Response
+	Data CreateBucketResponseData `json:"data,omitempty"`
+}
+
+type CreateBucketResponseData {
+	Bucket Bucket `json:"bucket"`
+}
+
+ 
+
+type UploadObjectResponse {
+	Response
+	Data Object `json:"data,omitempty"`
+}
+
+type DeleteObjectRequest {
+	ObjId uint64 `json:"objId"` // Object ID
+// BucketId   uint64 `json:"bucketId,optional"` // Bucket ID
+// BucketName string `json:"bucketName,optional"`
+// ObjectKey  string `json:"objectKey"`
+}
+
+// Define the response structure for deleting an object
+type DeleteObjectResponse {
+	Response
+}
+
+type ListObjectsResponse {
+	Response
+	Data ListObjectsResponseData `json:"data,omitempty"`
+}
+
+type ListObjectsResponseData {
+	Objects []Object `json:"objects"`
+	Total   uint64   `json:"total"`
+}
+
+// Bucket types
+type Bucket {
+	BucketId   uint64 `json:"bucketId"` // Bucket ID
+	BucketName string `json:"bucketName"` // Bucket name
+	UserId     uint64 `json:"userId"` // User ID
+	RegionName string `json:"regionName"` // RegionName
+	RegionId   uint64 `json:"regionId"` // RegionId
+	IsDeleted  int64  `json:"isDeleted"` // Soft delete flag
+	DeletedAt  uint64 `json:"deletedAt,optional"` // Deletion time
+	CreatedAt  uint64 `json:"createdAt"` // Creation time
+	UpdatedAt  uint64 `json:"updatedAt"` // Last update time
+}
+
+type UpdateBucketRequest {
+	BucketId   uint64 `json:"bucketId"` // Bucket ID
+	BucketName string `json:"bucketName"` // Bucket name
+	// RegionName     string `json:"regionName"` // RegionName
+	RegionId uint64 `json:"regionId,optional"` // RegionId
+}
+
+type GetBucketRequest {
+	BucketId uint64 `json:"bucketId"`
+}
+
+type DeleteBucketRequest {
+	BucketId uint64 `json:"bucketId"`
+}
+
+type ListBucketRequest {
+	RegionName string `json:"region,optional"` // Optional filter by region
+	RegionId   string `json:"regionId,optional"` // Optional filter by region
+	PaginationRequest
+}
+
+type BucketResponse {
+	Response
+	Data Bucket `json:"data,omitempty"`
+}
+
+type ListBucketResponse {
+	Response
+	Data ListBucketResponseData `json:"data,omitempty"`
+}
+
+type ListBucketResponseData {
+	Buckets []Bucket `json:"buckets"`
+	Total   uint64   `json:"total"`
+}
+
+// Object types
+type Object {
+	ObjId     uint64 `json:"objId"` // Object ID
+	BucketId  uint64 `json:"bucketId"` // Bucket ID
+	UserId    uint64 `json:"userId"` // User ID
+	Key       string `json:"key"` // Object key/name
+	Path      string `json:"path"` // Object path
+	Size      uint64 `json:"size"` // Object size
+	TreeId    uint64 `json:"treeId"` // Tree ID
+
+	CreatedAt uint64 `json:"createdAt"` // Creation time
+	UpdatedAt uint64 `json:"updatedAt"` // Last update time
+}
+
+type CreateObjectRequest {
+	BucketId uint64 `json:"bucketId"` // Bucket ID
+	Key      string `json:"key"` // Object key/name
+	Path     string `json:"path"` // Object path
+	Size     uint64 `json:"size"` // Object size
+}
+
+type UpdateObjectRequest {
+	ObjId uint64 `json:"objId"` // Object ID
+	Key   string `json:"key"` // Object key/name
+	Path  string `json:"path"` // Object path
+}
+
+type GetObjectRequest {
+	ObjId uint64 `json:"objId"`
+}
+
+type ListObjectRequest {
+	BucketId uint64 `json:"bucketId,optional"` // Optional filter by bucket
+	Key      string `json:"key,optional"` // Optional filter by key
+	Path     string `json:"path,optional"` // Optional filter by key
+	TreeId   uint64 `json:"treeId,optional"` // Optional filter by treeId
+	PaginationRequest
+}
+
+type ObjectResponse {
+	Response
+	Data Object `json:"data,omitempty"`
+}
+
+type ListObjectResponse {
+	Response
+	Data ListObjectResponseData `json:"data,omitempty"`
+}
+
+type ListObjectResponseData {
+	Objects []Object `json:"objects"`
+	Total   uint64   `json:"total"`
+}
+
+type ListObjTreeRequest {
+	BucketId uint64 `json:"bucketId"`
+	Path     string `json:"path,optional"` // Optional filter by key
+	
+}
+
+type ListObjTreeResponse {
+	Response
+	Data ListObjTreeResponseData `json:"data,omitempty"`
+}
+
+type ListObjTreeResponseData {
+	Tree  TreeNode `json:"tree"`
+	
+	
+}
+
+type TreeNode   {
+    TreeName string `json:"treeName"`
+	CreatedAt uint64 `json:"createdAt"` // Creation time
+	FullTreeName string `json:"fullTreeName"`
+	ParantTreeId uint64 `json:"parantTreeId"`
+	TreeId uint64 `json:"treeId"`
+    Children []*TreeNode `json:"children,omitempty"`
+}
+
+@server (
+	jwt:        Auth
+	prefix:     /api/v1
+	middleware: AuthInterceptor
+	timeout:    15s
+)
+
+
+
+
+service fca-api {
+	// Bucket endpoints
+	@handler CreateBucketHandler
+	post /bucket/create (CreateBucketRequest) returns (BucketResponse)
+
+	@handler GetBucketHandler
+	post /bucket/get (GetBucketRequest) returns (BucketResponse)
+
+	@handler UpdateBucketHandler
+	post /bucket/update (UpdateBucketRequest) returns (BucketResponse)
+	
+	@handler ListBucketHandler
+	post /bucket/list (ListBucketRequest) returns (ListBucketResponse)
+
+	@handler DeleteBucketHandler
+	post /bucket/delete (DeleteBucketRequest) returns (Response)
+
+
+
+	// Object endpoints
+	// @doc  "Create object, 但是已经被废弃"
+	// @handler CreateObjectHandler
+	// post /object/create (CreateObjectRequest) returns (ObjectResponse)
+
+	@handler GetObjectHandler
+	post /object/get (GetObjectRequest) returns (ObjectResponse)
+
+	@handler UpdateObjectHandler
+	post /object/update (UpdateObjectRequest) returns (ObjectResponse)
+
+	@handler DeleteObjectHandler
+	post /object/delete (DeleteObjectRequest) returns (Response)
+
+	@handler ListObjectHandler
+	post /object/list (ListObjectRequest) returns (ListObjectResponse)
+
+	@handler UploadObjectHandler
+	post /object/upload    returns (UploadObjectResponse)
+
+
+	@handler ListObjTreeHandler
+	post /object/tree/list  (ListObjTreeRequest) returns (ListObjTreeResponse)
+ 	
+	
+	@handler GetObjHandler
+	get /object/:bucketId/:file (ObjGetRequest)
+
+}
+
+
+type ObjGetRequest {
+	File string `path:"file"`
+	BucketId uint64 `path:"bucketId"`
+}
+ 
+ 

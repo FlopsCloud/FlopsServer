@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="config.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #captchaImage {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        #refreshButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #refreshButton:hover {
+            background-color: #0056b3;
+        }
+        #errorMessage {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Captcha Example</h1>
+        <div id="captchaContainer">
+            <img id="captchaImage" alt="Captcha Image" src="">
+        </div>
+        <button id="refreshButton">Refresh Captcha</button>
+        <div id="errorMessage"></div>
+        <div id="captchaId"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function loadCaptcha() {
+                $.ajax({
+                    url: FCA_HOST+'/v1/user/captcha',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response && response.code === 200 && response.data && response.data.captchaId && response.data.imageBase64) {
+                            $('#captchaImage').attr('src',  response.data.imageBase64);//'data:image/png;base64,' +
+                            localStorage.setItem('captchaId', response.data.captchaId);
+                            $('#errorMessage').text('');
+                            $('#captchaId').text(response.data.captchaId);
+
+                        } else {
+                            $('#errorMessage').text('Invalid captcha response');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#errorMessage').text('Error fetching captcha: ' + error);
+                    }
+                });
+            }
+
+            // Load captcha on page load
+            loadCaptcha();
+
+            // Refresh captcha when button is clicked
+            $('#refreshButton').click(loadCaptcha);
+        });
+    </script>
+</body>
+</html>

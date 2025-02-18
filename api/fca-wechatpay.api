@@ -1,0 +1,153 @@
+
+type RechargeOrderResponse {
+	Response
+	Data RechargeOrderData `json:"data,omitempty"`
+}
+
+type RechargeOrderData {
+	Id            int64     `json:"id"`             // ID
+	UserId        uint64    `json:"userId"`        // 用户ID
+	OrgId         uint64    `json:"orgId"`         // 组织ID
+	OrderNo   string `json:"orderNo"`
+	OrderTitle    string    `json:"orderTitle"`    // 订单标题
+	PayMethod uint64 `json:"payMethod"`
+	Remark        string    `json:"remark"`         // 订单备注
+	Amount    int64  `json:"amount"`
+	Status    string `json:"status"`
+	CreatedAt uint64 `json:"createdAt"`
+	PaidAt        uint64    `db:"paidAt"`        // 支付时间
+	PayCodeUrl    string    `db:"payCodeUrl"`   // 付款链接
+	TransactionId string    `db:"transactionId"` // 交易流水号
+
+}
+
+type ListRechargeHistoryRequest {
+	// UserId uint64 `json:"userId"`
+	PaginationRequest
+}
+
+type ListRechargeHistoryResponse {
+	Response
+	Data ListRechargeHistoryData `json:"data,omitempty"`
+}
+
+type ListRechargeHistoryData {
+	Orders []RechargeOrderData `json:"orders"`
+	Total  uint64              `json:"total"`
+}
+
+type ListAllRechargeOrdersRequest {
+	Status    string `json:"status,optional"`
+	PayMethod uint64 `json:"payMethod"`
+	PaginationRequest
+}
+
+type ListAllRechargeOrdersResponse {
+	Response
+	Data *ListAllRechargeOrdersData `json:"data,omitempty"`
+}
+
+type ListAllRechargeOrdersData {
+	Orders []RechargeOrderData `json:"orders"`
+	Total  uint64              `json:"total"`
+}
+
+type ApproveRejectRechargeOrderRequest {
+	OrderNo string `json:"orderNo"`
+	Action  string `json:"action"` // "approve" or "reject"
+	Reason  string `json:"reason,optional"`
+}
+
+
+type CreateRechargeOrderRequest {
+	OrgId     uint64 `json:"orgId"`
+	PayMethod uint64 `json:"payMethod"`
+	PayMoney  int64  `json:"payMoney"`
+}
+
+type CreateRechargeOrderData {
+	OrgId     uint64 `json:"orgId"`
+	PayMethod uint64 `json:"payMethod"`
+	Amount    int64  `json:"amount"`
+	Title     string `json:"title"`
+	OrderNo   string `json:"orderNo"`
+	Url       string `json:"url"`
+}
+
+type CreateRechargeOrderResponse {
+	Response
+	Data CreateRechargeOrderData `json:"data,omitempty"`
+}
+
+type GetRechargeOrderRequest {
+	OrderNo string `json:"orderNo"`
+}
+
+type GetRechargeOrderResponse {
+	Response
+	Data RechargeOrderData `json:"data,omitempty"`
+}
+
+
+@server (
+	prefix:  /api/v1
+	timeout: 15s
+)
+service fca-api {
+	 
+	//充值相关
+	@handler CallbackRechargeWeixinHandler
+	post /recharge/callbackWeixin returns (Response)
+}
+
+@server (
+	jwt: Auth
+	// 路由前缀
+	// 如果 key 固定为 "prefix:"
+	// 则代表路由前缀声明，value 则为具体的路由前缀值，字符串中没让必须以 / 开头
+	prefix: /api/v1
+	// 路由分组
+	// 如果 key 固定为 "group:"，则代表路由分组声明
+	// value 则为具体分组名称，在 goctl生成代码后会根据此值进行文件夹分组
+	//--- group: Foo
+	// 中间件
+	// 如果 key 固定为 middleware:"，则代表中间件声明
+	// value 则为具体中间件函数名称，在 goctl生成代码后会根据此值进生成对应的中间件函数
+	middleware: AuthInterceptor
+	// 超时控制
+	// 如果 key 固定为  timeout:"，则代表超时配置
+	// value 则为具体中duration，在 goctl生成代码后会根据此值进生成对应的超时配置
+	timeout: 15s
+	// 其他 key-value，除上述几个内置 key 外，其他 key-value
+	// 也可以在作为 annotation 信息传递给 goctl 及其插件，但就
+	// 目前来看，goctl 并未使用。
+	foo: bar
+)
+service fca-api { 
+
+	@doc "创建充值订单，并返回支付微信链接，生成二维码给用户扫码支付"
+	@handler CreateRechargeOrderHandler
+	post /recharge/create (CreateRechargeOrderRequest) returns (CreateRechargeOrderResponse)
+
+	@doc "获取充值订单"
+	@handler GetRechargeOrderHandler
+	post /recharge/getorder (GetRechargeOrderRequest) returns (GetRechargeOrderResponse)
+
+	@handler ListRechargeOrdersHandler
+	post /recharge/list (ListAllRechargeOrdersRequest) returns (ListAllRechargeOrdersResponse)
+
+
+	@doc "获取充值订单"
+	@handler ListRechargeHistoryHandler
+	post /user/recharge/history (ListRechargeHistoryRequest) returns (ListRechargeHistoryResponse)
+
+	// Admin-side APIs
+	@doc "管理员查看所有充值订单，status = pending  completed rejected failed "
+	@handler ListAllRechargeOrdersHandler
+	post /admin/recharge/list (ListAllRechargeOrdersRequest) returns (ListAllRechargeOrdersResponse)
+
+	@doc "管理员把 pending    状态的订单，改为 completed rejected   "
+
+	@handler ApproveRejectRechargeOrderHandler
+	post /admin/recharge/approve-reject (ApproveRejectRechargeOrderRequest) returns (Response)
+}

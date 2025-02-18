@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply To Join Organization</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="config.js"></script>
+
+</head>
+<body>
+    <h1>Apply To Join Organization</h1>
+    <form id="applyToJoinOrgForm">
+        <input type="text" id="orgId" placeholder="Organization ID" required>
+        <textarea id="message" placeholder="Application Message" required></textarea>
+        <button type="submit">Apply</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#applyToJoinOrgForm').submit(function(e) {
+                e.preventDefault();
+                var orgId = $('#orgId').val();
+                var message = $('#message').val();
+
+                // Here you would typically send an AJAX request to your server
+                console.log('Apply to join org attempt:', orgId, message);
+                alert('Apply to join organization functionality not implemented yet');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Invite User</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="config.js"></script>
+
+</head>
+<body>
+    <h1>Organization Invite User</h1>
+    <form id="orgInviteUserForm">
+        <input type="text" id="orgId" placeholder="Organization ID" required>
+        <input type="email" id="userEmail" placeholder="User Email" required>
+        <select id="role" required>
+            <option value="">Select Role</option>
+            <option value="member">Member</option>
+            <option value="admin">Admin</option>
+        </select>
+        <textarea id="message" placeholder="Invitation Message"></textarea>
+        <button type="submit">Send Invitation</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#orgInviteUserForm').submit(function(e) {
+                e.preventDefault();
+                var orgId = $('#orgId').val();
+                var userEmail = $('#userEmail').val();
+                var role = $('#role').val();
+                var message = $('#message').val();
+
+                // Here you would typically send an AJAX request to your server
+                console.log('Org invite user attempt:', orgId, userEmail, role, message);
+                alert('Organization invite user functionality not implemented yet');
+            });
+        });
+    </script>
+</body>
+</html>

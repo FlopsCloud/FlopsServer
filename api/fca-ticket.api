@@ -1,0 +1,261 @@
+
+// 1. 系统监控相关
+type SystemMetrics {
+    CpuUsage    float64 `json:"cpuUsage"`    // CPU使用率
+    MemoryUsage float64 `json:"memoryUsage"` // 内存使用率
+    GpuUsage    float64 `json:"gpuUsage"`    // GPU使用率
+    NetworkIO   float64 `json:"networkIO"`    // 网络IO
+    Timestamp   int64   `json:"timestamp"`    // 时间戳
+}
+
+type GetSystemMetricsRequest {
+    InstanceId uint64 `json:"instanceId"`
+    StartTime  int64  `json:"startTime,optional"`
+    EndTime    int64  `json:"endTime,optional"`
+}
+
+type GetSystemMetricsResponse {
+    Response
+    Data []SystemMetrics `json:"data,omitempty"`
+}
+
+// 2. 在线客服支持
+type SupportTicket {
+    TicketId    uint64 `json:"ticketId"`
+    UserId      uint64 `json:"userId"`
+    Title       string `json:"title"`
+    Description string `json:"description"`
+    Status      string `json:"status"` // open, in-progress, resolved, closed
+    Priority    string `json:"priority"` // low, medium, high, urgent
+    Images      string `json:"images"` // 图片逗号分割
+    CreatedAt   int64  `json:"createdAt"`
+    UpdatedAt   int64  `json:"updatedAt"`
+}
+
+
+type ReplySupportTicketRequest {
+		TicketId  uint64    `json:"ticketId"` // 工单ID
+		Content   string    `json:"content"`   // 回复内容
+        Images    string    `json:"images,optional"` // 图片逗号分割
+}
+
+type WithdrawSupportTicketRequest {
+		TicketId  uint64    `json:"ticketId"` // 工单ID
+        ReplyId   uint64    `json:"replyId"` // 回复ID
+}
+
+
+type CloseSupportTicketRequest {
+		TicketId  uint64    `json:"ticketId"` // 工单ID
+}
+
+
+type ReplyTicket {
+    	ReplyId   uint64    `json:"replyId"`
+		TicketId  uint64    `json:"ticketId"` // 工单ID
+		UserId    uint64    `json:"userId"`   // 回复用户ID
+		Content   string    `json:"content"`   // 回复内容
+        Images    string    `json:"images,optional"` // 图片逗号分割
+		CreatedAt uint64 `json:"createdAt"`
+        Nickname  string `json:"nickname"`
+        HeadUrl   string `json:"headUrl"`
+}
+
+type GetSupportTicketsRequest {
+    TicketId    uint64 `json:"ticketId"`
+}
+type CreateSupportTicketRequest {
+    Title       string `json:"title"`
+    Description string `json:"description"`
+    Images      string `json:"images,optional"` // 图片逗号分割
+    Priority    string `json:"priority,optional"`
+}
+
+type UpdateSupportTicketRequest {
+    TicketId    uint64 `json:"ticketId"`
+    Status      string `json:"status,optional"`
+    Description string `json:"description,optional"`
+}
+
+type ListSupportTicketsRequest {
+    Status string `json:"status,optional"`
+    PaginationRequest
+}
+
+
+type AdminListSupportTicketsRequest {
+    Status string `json:"status,optional"`
+    PaginationRequest
+}
+
+
+type SupportTicketResponse {
+    Response
+    Data SupportTicket `json:"data,omitempty"`
+}
+
+type GetSupportTicketsResponse {
+    Response
+    Data GetSupportTicketsResponseData `json:"data,omitempty"`
+}
+type GetSupportTicketsResponseData {
+    Ticket SupportTicket `json:"ticket"`
+    ReplyTicket []ReplyTicket `json:"replys"`
+}
+
+type ListSupportTicketsResponse {
+    Response
+    Data ListSupportTicketsResponseData `json:"data,omitempty"`
+}
+
+type ListSupportTicketsResponseData {
+    Tickets []SupportTicket `json:"tickets"`
+    Total   uint64         `json:"total"`
+}
+
+// 3. 系统通知
+
+type MarkNotificationReadRequest {
+    NotificationId uint64 `json:"notificationId"`
+}
+
+type SystemNotification {
+    NotificationId uint64 `json:"notificationId"`
+    UserId         uint64 `json:"userId,optional"`  // 如果为空则为全局通知
+    OrgId          uint64 `json:"orgId,optional"`   // 如果为空则不限组织
+    Title          string `json:"title"`
+    Content        string `json:"content"`
+    Type           string `json:"type"`    // system, maintenance, billing, security
+    // Status         string `json:"status"`  // unread, read
+    CreatedAt      uint64  `json:"createdAt"`
+    IsRead uint64 `json:"isRead"`
+}
+
+type CreateNotificationRequest {
+    Title    string `json:"title"`
+    Content  string `json:"content"`
+    Type     string `json:"type"`
+    UserId   uint64 `json:"userId,optional"`
+    OrgId    uint64 `json:"orgId,optional"`
+}
+
+type AdminUpdateNotificationRequest {
+    NotificationId uint64 `json:"notificationId"`
+    Title    string `json:"title"`
+    Content  string `json:"content"`
+    Type     string `json:"type"`
+    UserId   uint64 `json:"userId"`
+    OrgId    uint64 `json:"orgId"`
+}
+
+    type ListNotificationsRequest {
+        Type   string `json:"type,optional"`
+        OrgId uint64 `json:"orgId,optional"`
+        Status string `json:"status,optional"`
+        PaginationRequest
+    }
+
+    type AdminListNotificationsRequest {
+        Type   string `json:"type,optional"`
+        OrgId uint64 `json:"orgId,optional"`
+        
+        PaginationRequest
+    }
+
+    type AdminDeleteNotificationRequest {
+        NotificationId uint64 `json:"notificationId"`
+    }
+
+type NotificationResponse {
+    Response
+    Data SystemNotification `json:"data,omitempty"`
+}
+
+type ListNotificationsResponse {
+    Response
+    Data ListNotificationsResponseData `json:"data,omitempty"`
+}
+
+type ListNotificationsResponseData {
+    Notifications []SystemNotification `json:"notifications"`
+    Total         uint64              `json:"total"`
+}
+
+@server (
+    jwt:        Auth
+    prefix:     /api/v1
+    group:      ticket
+    middleware: AuthInterceptor
+    timeout:    15s
+)
+service fca-api {
+    // 系统监控
+    @handler GetSystemMetricsHandler
+    post /metrics/get (GetSystemMetricsRequest) returns (GetSystemMetricsResponse)
+    
+    // 技术支持
+    @handler CreateSupportTicketHandler
+    post /support/ticket/create (CreateSupportTicketRequest) returns (SupportTicketResponse)
+    
+    @handler UpdateSupportTicketHandler
+    post /support/ticket/update (UpdateSupportTicketRequest) returns (SupportTicketResponse)
+    
+
+    @doc "user list ticket,open, in-progress, resolved, closed"
+    @handler ListSupportTicketsHandler
+    post /support/ticket/list (ListSupportTicketsRequest) returns (ListSupportTicketsResponse)
+    
+    @handler GetSupportTicketsHandler
+    post /support/ticket/get (GetSupportTicketsRequest) returns (GetSupportTicketsResponse)
+    
+    @doc "user close ticket"
+    @handler CloseSupportTicketHandler
+    post /support/ticket/close (CloseSupportTicketRequest) returns (Response)
+
+    @doc "user resolved ticket"
+    @handler ResolvedSupportTicketHandler
+    post /support/ticket/resolved (CloseSupportTicketRequest) returns (Response)
+
+
+    @doc "user and admin use same api，images is comma separated"
+    @handler ReplySupportTicketHandler
+    post /support/ticket/reply (ReplySupportTicketRequest) returns (Response)
+
+
+    @doc "withdraw reply within 2 min early , if > 2 min ,can not withdraw"
+    @handler WithdrawSupportTicketHandler
+    post /support/ticket/withdraw (WithdrawSupportTicketRequest) returns (Response)
+
+
+    @doc "admin list ticket"
+    @handler AdminListSupportTicketsHandler
+    post /admin/ticket/list (AdminListSupportTicketsRequest) returns (ListSupportTicketsResponse)
+
+    @doc "admin close ticket"
+    @handler AdminCloseSupportTicketsHandler
+    post /admin/ticket/close (CloseSupportTicketRequest) returns (Response)
+
+  
+    // 系统通知
+    @handler CreateNotificationHandler
+    post /notification/create (CreateNotificationRequest) returns (NotificationResponse)
+    
+    @doc "list notifications status=unread,read,all"
+    @handler ListNotificationsHandler
+    post /notification/list (ListNotificationsRequest) returns (ListNotificationsResponse)
+    
+    @handler MarkNotificationReadHandler
+    post /notification/read  (MarkNotificationReadRequest) returns (Response)
+
+    @doc "admin update notification 只有超级管理员可以更新通知"
+    @handler AdminUpdateNotificationHandler
+    post /admin/notification/update  (AdminUpdateNotificationRequest) returns (Response)
+
+    @doc "admin list notification 只有超级管理员和系统管理员可以查看所有通知"
+    @handler AdminListNotificationsHandler
+    post /admin/notification/list (AdminListNotificationsRequest) returns (ListNotificationsResponse)
+
+    @doc "admin delete notification 只有超级管理员和系统管理员可以删除通知"
+    @handler AdminDeleteNotificationHandler
+    post /admin/notification/delete (AdminDeleteNotificationRequest) returns (Response)
+}

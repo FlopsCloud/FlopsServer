@@ -1,0 +1,37 @@
+Name: fca-api
+Host: 0.0.0.0
+Port: 8888
+
+Mysql:
+  DataSource:    
+
+CacheRedis:
+- Host: 127.0.0.1:6379
+  Type: node
+  Pass: gzfjsoft@redis
+
+Auth:
+  AccessSecret:  
+  AccessExpire: 7200
+
+Salt:    
+
+WeixinPay:
+  AppId: ' '
+  MerchantId: ' '
+  MerchantKey: ' '
+  SerialNumber: ' '
+  NotifyUrl: ' '
+  PrivateKeyPath: 'weixin.pem'
+
+Mail:
+  MailAccount:  
+  MailHost: smtp.163.com
+  MailPort: 25
+  MailPass:  
+
+Path: ./upload/
+
+Google:
+  Key:  
+  Client:  

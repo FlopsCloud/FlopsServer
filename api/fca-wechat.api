@@ -1,0 +1,108 @@
+// wechat_login.api
+syntax = "v1"
+
+info(
+    title: "Wechat Official Account Login API"
+    desc: "Wechat Official Account Scan QR Code Login"
+    author: "peter"
+    version: "v1"
+)
+
+// 前端 get  /wechat/login/qrcode   生成二维码  微信扫码登录 ,超时60s 
+// 前端 get  /wechat/login/checkqrcode/{uuid}  检查二维码是否扫描成功  微信扫码登录  成功返回 token  失败返回错误信息 
+// 300 错误  重新扫描
+// 400 错误  重新生产二维码
+
+
+type (
+    // 生成登录二维码请求
+    GenerateQRCodeReq {
+        // Scene string `path:"scene"` // 自定义场景值
+    }
+
+    CheckQRCodeReq {
+        Scene string `path:"scene"` // 自定义场景值
+    }
+
+
+    // 生成登录二维码响应
+    GenerateQRCodeResp {
+        Response
+        Data QRCodeData `json:"data,omitempty"`
+    }
+    // 二维码数据
+    QRCodeData {
+         
+        QrcodeUrl    string `json:"qrcode_url"`    // 二维码地址
+        TicketId     string `json:"ticket_id"`     // 票据ID
+        ExpireAt     int64  `json:"expire_at"`     // 过期时间
+        Scene       string `json:"scene"`         // 自定义场景值
+    }
+
+    // 扫码回调请求
+    WechatQRCallbackReq {
+        TicketId   string `json:"ticket_id"`
+        OpenId     string `json:"open_id"`
+        UnionId    string `json:"union_id,optional"`
+        UserInfo   string `json:"user_info"`
+    }
+
+    // 登录响应
+    LoginQRResp {
+        UserId    uint64  `json:"user_id"`
+        Token     string `json:"token"`
+        Nickname  string `json:"nickname"`
+        Avatar    string `json:"avatar"`
+    }
+ 
+    // WechatMessageRequest用于接收公众号消息请求
+    WechatMessageRequest {
+        Content string `json:"content"`
+    }
+    // WechatMessageResponse用于返回给公众号的回复消息
+    WechatMessageResponse {
+        ReplyContent string `json:"reply_content"`
+    }
+)
+
+@server (
+ 
+	prefix:     /api/v1
+    group:      wx
+	 
+	timeout:    60s
+)
+
+service fca-api {
+
+    @doc "废弃"
+    @handler CheckQRCodeHandler
+    get /wechat/login/checkqrcode/:scene (CheckQRCodeReq) returns (LoginResponse)
+
+}
+
+@server (
+ 
+	prefix:     /api/v1
+    group:      wx
+	 
+	timeout:    15s
+)
+
+service fca-api {
+    @doc "废弃"
+    @handler GenerateQRCode
+    get /wechat/login/qrcode (GenerateQRCodeReq) returns (GenerateQRCodeResp)
+
+    //微信推送消息处理
+    @handler WechatMessageHandler
+    post /wechat/message (WechatMessageRequest) returns (WechatMessageResponse)
+
+    //微信 url 设置
+    @handler WechatMessageGetHandler
+    get /wechat/message   returns (WechatMessageResponse)
+
+    // 暂时不使用
+    // @handler WechatQRCallback
+    // post /wechat/login/callback (WechatQRCallbackReq) returns (LoginQRResp)
+}

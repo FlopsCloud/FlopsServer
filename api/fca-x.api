@@ -1,0 +1,46 @@
+
+type (
+    XLoginRequest {
+        RedirectURL string `form:"redirectUrl,optional"`
+
+    }
+
+    XLoginResponse {
+        AuthURL string `json:"authUrl"`
+ 
+    }
+
+    XCallbackRequest {
+        Code string `form:"code"`
+    }
+
+    XCallbackResponse {
+        AccessToken  string `json:"accessToken"`
+	    AccessExpire int64  `json:"accessExpire"`
+        Message      string `json:"message"`        
+        Raw  string `json:"raw"`
+        UserInfo     *XUserInfo `json:"userInfo"`
+    }
+
+    XUserInfo {
+        Id            string `json:"id"`
+        Name  string `json:"name"`
+        Username string `json:"usernamel"`
+		VerifiedEmail bool   `json:"verified_email"`
+		Picture       string `json:"picture"`
+
+    }
+)
+@server (
+	prefix:     /api/v1
+	timeout:    15s
+)
+service fca-api {
+    //  redirectUrl /x/login?redirectUrl=http://xxx.com
+    @handler XLoginHandler
+    get /x/login (XLoginRequest) returns (XLoginResponse)
+
+
+    @handler XCallbackHandler
+    get /x/callback (XCallbackRequest) returns (XCallbackResponse)
+}

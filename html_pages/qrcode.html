@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>使用jquery.qrcode生成二维码</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+<body>
+    <!-- 创建一个用于放置二维码的div元素 -->
+    <div id="qrcodeContainer"></div>
+    
+    <h1>二维码生成器</h1>
+    <input type="text" id="text" placeholder="输入要生成二维码的文本">
+    <button onclick="generateQRCode()">生成二维码</button>
+    <br><br>
+    <div id="qrcode"></div>
+
+    <script>
+
+        function generateQRCode() {
+            // 获取输入的文本
+            var text = document.getElementById('text').value;
+            text = 'http://127.0.0.1:8888/api/v1/wechat/login?redirect_uri=https://flopscloud.cn/api/v1/wechat/callback';
+            // 清空之前的二维码
+
+            fetch('http://127.0.0.1:8888/api/v1/wechat/login?redirect_uri=https://flopscloud.cn/api/v1/wechat/callback')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json(); // 解析JSON响应
+            })
+            .then(data => {
+                console.log(data.url); // 打印响应数据
+                const url = data.url; // 假设返回的JSON对象中有一个url字段
+
+                
+
+
+                document.getElementById('qrcode').innerHTML = '';
+                // 生成新的二维码
+                new QRCode(document.getElementById('qrcode'), url);
+    
+           
+            })
+            .catch(error => {
+                console.log('There has been a problem with your fetch operation:', error);
+            });
+
+            
+        }
+
+       
+    </script>
+
+
+ 
+</body>
+</html>

@@ -1,0 +1,57 @@
+ 
+
+
+
+type (
+    // WechatLoginRequest主要用于触发微信扫码登录引导
+     WechatLoginRequest {
+       // 可以添加一些额外的参数，如登录后的跳转页面等
+       //RedirectUri string `json:"redirect_uri"` 
+       RedirectUri string `form:"redirect_uri"`
+    }
+
+    
+    // WechatLoginResponse用于返回微信登录后的用户相关信息
+     WechatLoginResponse {
+       Url  string `json:"url"`
+       OpenId    string `json:"open_id"`
+       Nickname  string `json:"nickname"`
+    
+       AvatarUrl string `json:"avatar_url"`
+    }
+
+    // WechatCallbackRequest用于接收微信回调的请求信息，主要是授权码
+    WechatCallbackRequest {
+      //  Code string `json:"code"`
+       Code string `form:"code"`
+    }
+    // WechatCallbackResponse用于返回微信回调处理后的结果（可能只是简单的状态码等）
+    WechatCallbackResponse {
+       Response
+
+       Status int `json:"status"`
+       OpenId string `json:"open_id"`
+       Nickname string `json:"nickname"`
+       AvatarUrl string `json:"avatar_url"`
+       Data LoginResponseData   `json:"data"`
+    }
+
+
+		
+)
+
+ 
+@server (
+	prefix:  /api/v1
+	timeout: 15s
+)
+service fca-api {
+
+   @doc " https://dev.flopscloud.cn/api/v1/wechat/login?redirect_uri=http://flopscloud.cn/api/v1/wechat/callback"
+ 
+   @handler WechatLoginHandler
+   get /wechat/login ( WechatLoginRequest) returns (WechatLoginResponse)
+
+    @handler WechatCallbackHandler
+    get /wechat/callback (WechatCallbackRequest) returns (WechatCallbackResponse)
+}

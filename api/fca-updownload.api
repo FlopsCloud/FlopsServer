@@ -1,0 +1,17 @@
+ 
+type DownloadRequest {
+	File string `path:"file"`
+}
+
+type UploadResponse {
+	Code int `json:"code"`
+}
+
+
+service fca-api {
+	@handler DownloadHandler
+	get /static/:file(DownloadRequest)
+
+	@handler UploadHandler
+	post /upload returns (UploadResponse)
+}

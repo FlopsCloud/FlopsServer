@@ -1,0 +1,10 @@
+@server (
+	prefix:  /api/v1
+	timeout: 15s
+)
+service fca-api {
+ 
+	@handler CallbackRechargeAlipayHandler
+	post /recharge/callbackalipay returns (Response)
+}
+ 

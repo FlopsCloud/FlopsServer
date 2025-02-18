@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Column Layout with Iframe</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 左边导航栏 -->
+        <nav class="nav">
+            <!-- 引入 nav.html 文件 -->
+            <iframe src="navigate.html" frameborder="0" class="nav-frame"></iframe>
+        </nav>
+
+        <!-- 右边内容区域 -->
+        <div class="content">
+            <iframe src="login.html" frameborder="0" class="content-frame" name="content-frame"></iframe>
+        </div>
+    </div>
+</body>
+</html>

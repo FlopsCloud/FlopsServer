@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="config.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 5px;
+            width: 200px;
+        }
+        #captchaImage {
+            margin-top: 10px;
+            max-width: 200px;
+        }
+        #refreshButton {
+            width: auto;
+            padding: 5px 10px;
+        }
+        #errorMessage {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <input type="text" id="username" placeholder="Username" required><br>
+            <input type="email" id="email" placeholder="Email" required><br>
+            <input type="password" id="password" placeholder="Password" required><br>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required><br>
+            <div id="captchaContainer">
+                <img id="captchaImage" alt="Captcha Image" src="">
+            </div>
+            <input type="text" id="captchaInput" placeholder="Enter Captcha" required><br>
+            <button type="button" id="refreshButton">Refresh Captcha</button><br>
+            <button type="submit">Register</button>
+        </form>
+        <div id="errorMessage"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function loadCaptcha() {
+                $.ajax({
+                    url: FCA_HOST+'/v1/user/captcha',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response && response.code === 200 && response.data && response.data.captchaId && response.data.imageBase64) {
+                            $('#captchaImage').attr('src', response.data.imageBase64);
+                            localStorage.setItem('captchaId', response.data.captchaId);
+                            $('#errorMessage').text('');
+                        } else {
+                            $('#errorMessage').text('Invalid captcha response');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#errorMessage').text('Error fetching captcha: ' + error);
+                    }
+                });
+            }
+
+            // Load captcha on page load
+            loadCaptcha();
+
+            // Refresh captcha when button is clicked
+            $('#refreshButton').click(loadCaptcha);
+
+            $('#registerForm').submit(function(e) {
+                e.preventDefault();
+                var username = $('#username').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var confirmPassword = $('#confirmPassword').val();
+                var captchaInput = $('#captchaInput').val();
+                var captchaId = localStorage.getItem('captchaId');
+
+                if (password !== confirmPassword) {
+                    $('#errorMessage').text("Passwords do not match!");
+                    return;
+                }
+
+                // Here you would typically send an AJAX request to your server
+                $.ajax({
+                    url: FCA_HOST+'/v1/register', // Replace with your actual registration endpoint
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        captchaId: captchaId,
+                        captchaInput: captchaInput
+                    }),
+                    success: function(response) {
+                        if (response && response.code === 200) {
+                            $('#errorMessage').text('Registration successful!');
+                            // Redirect to login page or update UI as needed
+                        } else {
+                            $('#errorMessage').text('Registration failed: ' + (response.message || 'Unknown error'));
+                            loadCaptcha(); // Refresh captcha on failed registration
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#errorMessage').text('Registration error: ' + error);
+                        loadCaptcha(); // Refresh captcha on error
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+syntax = "v1"
+
+info(
+    title: "HTML Page Service"
+    desc: "Service for rendering HTML pages"
+    author: "PeterSZW"
+    version: "1.0"
+)
+
+// Define service type for serving HTML pages
+type (
+    HtmlResponse {
+        ContentType string `header:"Content-Type"` // Set content type header
+        Body string  `json:"body"`                      // HTML content
+    }
+
+    // PageRequest {
+    //     Path string `path:"path,optional"`         // Optional path parameter
+    //     Theme string `form:"theme,optional"`       // Optional theme parameter
+    // }
+)
+
+@server(
+    group: page
+)
+
+service fca-api {
+    // @doc "Get HTML page"
+    // @handler GetPage
+    // get /view/:path (PageRequest) returns (HtmlResponse)
+    
+    @doc "Get home page"
+    @handler GetHome
+    get / returns (HtmlResponse)
+
+}
+
+
+@server (
+    group: page
+	prefix:     /api/v1
+    timeout:    15s
+)
+service fca-api {
+    
+    @doc "Get TOC  "
+    @handler GetTocHandler
+    get /doc/toc returns (HtmlResponse)
+
+    @doc "Get Privacy policy  "
+    @handler GetPPHandler
+    get /doc/pp returns (HtmlResponse)
+}

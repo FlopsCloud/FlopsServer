@@ -1,0 +1,45 @@
+
+type (
+    GLoginRequest {
+       RedirectURL string `form:"redirectUrl,optional"`
+    }
+
+    GLoginResponse {
+        AuthURL string `json:"authUrl"`
+ 
+    }
+
+    CallbackRequest {
+        Code string `form:"code"`
+    }
+
+    CallbackResponse {
+        AccessToken  string `json:"accessToken"`
+	    AccessExpire int64  `json:"accessExpire"`
+        Message      string `json:"message"`   
+        Raw  string `json:"raw"`
+     
+        UserInfo     *UserInfo `json:"userInfo"`
+    }
+
+    UserInfo {
+        Id            string `json:"id"`
+        Name  string `json:"name"`
+        Email string `json:"email"`
+		VerifiedEmail bool   `json:"verified_email"`
+		Picture       string `json:"picture"`
+
+    }
+)
+@server (
+	prefix:     /api/v1
+	timeout:    15s
+)
+service fca-api {
+    //  redirectUrl /google/login?redirectUrl=http://xxx.com
+    @handler GoogleLogin
+    get /google/login (GLoginRequest) returns (GLoginResponse)
+
+    @handler GoogleCallback
+    get /google/callback (CallbackRequest) returns (CallbackResponse)
+}
