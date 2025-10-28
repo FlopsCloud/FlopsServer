@@ -1,3 +1,5 @@
+<img src="FlopsCloud算力云租赁系统机软件著作权.jpg" alt="软件著作权" width="500">
+
 #### 安装依赖中间件
 
     # 安装 redis
@@ -58,3 +60,5 @@
     air
     
 > 参考地址：`go install github.com/air-verse/air@latest`
+
+
