@@ -1,4 +1,3 @@
-<img src="FlopsCloud算力云租赁系统机软件著作权.jpg" alt="软件著作权" width="500">
 
 #### 安装依赖中间件
 
